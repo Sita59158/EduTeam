@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Teacher Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f0f0f5; }
+        .navbar {
+            background: #4a235a;
+            padding: 14px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .navbar-left { color: white; font-size: 16px; font-weight: 500; }
+        .navbar-right { display: flex; align-items: center; gap: 20px; }
+        .navbar-right a { color: #ddd; font-size: 13px; text-decoration: none; }
+        .avatar {
+            width: 30px; height: 30px;
+            border-radius: 50%;
+            background: #6b3580;
+            display: flex; align-items: center;
+            justify-content: center;
+            color: white; font-size: 12px; font-weight: 500;
+        }
+        .container { display: flex; min-height: calc(100vh - 50px); }
+        .sidebar {
+            width: 180px;
+            background: white;
+            border-right: 1px solid #eee;
+            padding: 16px 0;
+        }
+        .sidebar a {
+            display: block;
+            padding: 10px 16px;
+            font-size: 13px;
+            color: #666;
+            text-decoration: none;
+        }
+        .sidebar a.active {
+            background: #f3eaf7;
+            border-left: 3px solid #4a235a;
+            color: #4a235a;
+            font-weight: 500;
+        }
+        .sidebar a:hover { background: #f9f9f9; }
+        .main { flex: 1; padding: 24px; }
+        .page-title {
+            font-size: 20px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 4px;
+        }
+        .page-subtitle {
+            font-size: 13px;
+            color: #999;
+            margin-bottom: 20px;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            background: white;
+            border: 1px solid #eee;
+            border-radius: 10px;
+            padding: 16px;
+        }
+        .stat-card p:first-child {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 6px;
+        }
+        .stat-card p:last-child {
+            font-size: 26px;
+            font-weight: 500;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .card {
+            background: white;
+            border: 1px solid #eee;
+            border-radius: 10px;
+            padding: 16px;
+        }
+        .card-title {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card-title a {
+            font-size: 12px;
+            color: #4a235a;
+            text-decoration: none;
+        }
+        table {
+            width: 100%;
+            font-size: 12px;
+            border-collapse: collapse;
+        }
+        th {
+            text-align: left;
+            padding: 6px 4px;
+            color: #999;
+            font-weight: 500;
+            border-bottom: 1px solid #eee;
+        }
+        td { padding: 8px 4px; border-bottom: 1px solid #f5f5f5; }
+        .student-info { display: flex; align-items: center; gap: 8px; }
+        .student-avatar {
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            display: flex; align-items: center;
+            justify-content: center;
+            font-size: 11px; font-weight: 500;
+        }
+        .badge-active {
+            background: #e8f5e9; color: #2e7d32;
+            padding: 2px 8px; border-radius: 10px; font-size: 11px;
+        }
+        .badge-inactive {
+            background: #fce4ec; color: #c62828;
+            padding: 2px 8px; border-radius: 10px; font-size: 11px;
+        }
+        .edit-btn {
+            background: #e3f2fd; color: #1565c0;
+            padding: 3px 8px; border: none;
+            border-radius: 5px; cursor: pointer; font-size: 11px;
+        }
+        .add-btn {
+            margin-top: 12px; width: 100%; padding: 8px;
+            background: #4a235a; color: white;
+            border: none; border-radius: 6px;
+            font-size: 13px; cursor: pointer;
+        }
+        .quick-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .quick-item {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 14px;
+            text-align: center;
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+        }
+        .quick-item p:first-child { font-size: 22px; margin-bottom: 4px; }
+        .quick-item p:last-child { font-size: 12px; font-weight: 500; }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <span class="navbar-left"> Edu Team - Student Record System</span>
+        <div class="navbar-right">
+            <a href="../isha/login.html">Login</a>
+            <a href="../deepa/student_list.html">Students</a>
+            <a href="../isha/course_list.html">Courses</a>
+            <a href="../isha/login.html">Logout</a>
+            <div class="avatar">SS</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="sidebar">
+            <a href="dashboard.html" class="active">Dashboard</a>
+            <a href="../deepa/student_list.html">Students</a>
+            <a href="../binu/grade_list.html">Grades</a>
+            <a href="../satinder/attendance_list.html">Attendance</a>
+            <a href="../isha/course_list.html">Courses</a>
+            <a href="../isha/login.html">Logout</a>
+        </div>
+
+        <div class="main">
+            <p class="page-title">Dashboard Overview</p>
+            <p class="page-subtitle">
+                Developer: Sita Subedi | SRS-12</p>
+
+            <div class="stats">
+                <div class="stat-card">
+                    <p>Total Students</p>
+                    <p style="color:#4a235a">124</p>
+                </div>
+                <div class="stat-card">
+                    <p>Active Students</p>
+                    <p style="color:#2e7d32">110</p>
+                </div>
+                <div class="stat-card">
+                    <p>Avg Grade</p>
+                    <p style="color:#1565c0">B+</p>
+                </div>
+                <div class="stat-card">
+                    <p>Attendance Rate</p>
+                    <p style="color:#e65100">87%</p>
+                </div>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <div class="card-title">
+                        <span>Recent Students</span>
+                        <a href="../deepa/student_list.html">
+                            View all</a>
+                    </div>
+                    <table>
+                        <tr>
+                            <th>Name</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="student-info">
+                                    <div class="student-avatar"
+                                        style="background:#f3eaf7;
+                                        color:#4a235a">JD</div>
+                                    John Doe
+                                </div>
+                            </td>
+                            <td><span class="badge-active">
+                                Active</span></td>
+                            <td><button class="edit-btn"
+                                onclick="window.location=
+                                '../deepa/edit_student.html'">
+                                Edit</button></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="student-info">
+                                    <div class="student-avatar"
+                                        style="background:#e3f2fd;
+                                        color:#1565c0">JS</div>
+                                    Jane Smith
+                                </div>
+                            </td>
+                            <td><span class="badge-active">
+                                Active</span></td>
+                            <td><button class="edit-btn"
+                                onclick="window.location=
+                                '../deepa/edit_student.html'">
+                                Edit</button></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="student-info">
+                                    <div class="student-avatar"
+                                        style="background:#fce4ec;
+                                        color:#c62828">ML</div>
+                                    Mark Lee
+                                </div>
+                            </td>
+                            <td><span class="badge-inactive">
+                                Inactive</span></td>
+                            <td><button class="edit-btn"
+                                onclick="window.location=
+                                '../deepa/edit_student.html'">
+                                Edit</button></td>
+                        </tr>
+                    </table>
+                    <button class="add-btn"
+                        onclick="window.location=
+                        '../deepa/add_student.html'">
+                        + Add New Student
+                    </button>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">
+                        <span>Quick Actions</span>
+                    </div>
+                    <div class="quick-grid">
+                        <a href="../deepa/add_student.html"
+                            class="quick-item"
+                            style="border-color:#4a235a">
+                            <p>&#128100;</p>
+                            <p style="color:#4a235a">Add Student</p>
+                        </a>
+                        <a href="../binu/add_grade.html"
+                            class="quick-item"
+                            style="border-color:#1565c0">
+                            <p>&#128221;</p>
+                            <p style="color:#1565c0">Add Grade</p>
+                        </a>
+                        <a href="../satinder/add_attendance.html"
+                            class="quick-item"
+                            style="border-color:#2e7d32">
+                            <p>&#128197;</p>
+                            <p style="color:#2e7d32">Attendance</p>
+                        </a>
+                        <a href="../isha/course_list.html"
+                            class="quick-item"
+                            style="border-color:#e65100">
+                            <p>&#128218;</p>
+                            <p style="color:#e65100">Courses</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
