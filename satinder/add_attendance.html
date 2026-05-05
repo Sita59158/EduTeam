@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edu Team - Student Record System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f0f5;
+            display: flex; flex-direction: column; min-height: 100vh;
+        }
+        .navbar {
+            background: #4a235a; padding: 14px 24px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .navbar span { color: white; font-size: 16px; font-weight: 500; }
+        .navbar-right { display: flex; align-items: center; gap: 20px; }
+        .navbar-right a { color: #ddd; font-size: 13px; text-decoration: none; }
+        .avatar {
+            width: 30px; height: 30px; border-radius: 50%;
+            background: #6b3580; display: flex;
+            align-items: center; justify-content: center;
+            color: white; font-size: 12px; font-weight: 500;
+        }
+        .content { flex: 1; display: flex; justify-content: center; align-items: center; padding: 40px 24px; }
+        .card { background: white; padding: 40px; border-radius: 12px; width: 480px; border: 1px solid #eee; }
+        h1 { text-align: center; color: #4a235a; font-size: 22px; margin-bottom: 5px; }
+        .subtitle { text-align: center; color: #999; font-size: 13px; margin-bottom: 25px; }
+        label { display: block; font-weight: 500; margin-bottom: 5px; color: #333; font-size: 14px; }
+        input, select { width: 100%; padding: 11px 14px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; margin-bottom: 15px; outline: none; }
+        input:focus, select:focus { border-color: #4a235a; }
+        input::placeholder { color: #bbb; }
+        .save-btn { width: 100%; padding: 13px; background: #4a235a; color: white; border: none; border-radius: 8px; font-size: 15px; cursor: pointer; margin-top: 5px; }
+        .save-btn:hover { background: #6b3580; }
+        .back-link { display: block; text-align: center; margin-top: 15px; color: #4a235a; text-decoration: none; font-size: 13px; }
+        .error { color: red; font-size: 12px; margin-top: -10px; margin-bottom: 10px; display: block; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <span>Edu Team - Student Record System</span>
+        <div class="navbar-right">
+            <a href="../sita/dashboard.html">Dashboard</a>
+            <a href="attendance_list.html">Attendance</a>
+            <div class="avatar">ST</div>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="card">
+            <h1>Add Attendance</h1>
+            <p class="subtitle">Developer: Satinder Singh Tanwar | SRS-87</p>
+            <form onsubmit="validateForm(event)">
+                <label>Student ID:</label>
+                <input type="number" id="student_id" placeholder="Enter student ID" required>
+                <span class="error" id="student_id_error"></span>
+
+                <label>Teacher ID:</label>
+                <input type="number" id="teacher_id" placeholder="Enter teacher ID" required>
+                <span class="error" id="teacher_id_error"></span>
+
+                <label>Date:</label>
+                <input type="date" id="attendance_date" required>
+                <span class="error" id="date_error"></span>
+
+                <label>Status:</label>
+                <select id="status" required>
+                    <option value="">-- Select Status --</option>
+                    <option value="Present">Present</option>
+                    <option value="Absent">Absent</option>
+                    <option value="Late">Late</option>
+                </select>
+                <span class="error" id="status_error"></span>
+
+                <button type="submit" class="save-btn">Add Attendance</button>
+                <a href="attendance_list.html" class="back-link">&larr; Back to Attendance List</a>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function validateForm(event) {
+            event.preventDefault();
+            let valid = true;
+
+            let studentId = document.getElementById('student_id').value;
+            if(studentId === '' || studentId <= 0) {
+                document.getElementById('student_id_error').textContent = 'Student ID is required!';
+                valid = false;
+            } else { document.getElementById('student_id_error').textContent = ''; }
+
+            let teacherId = document.getElementById('teacher_id').value;
+            if(teacherId === '' || teacherId <= 0) {
+                document.getElementById('teacher_id_error').textContent = 'Teacher ID is required!';
+                valid = false;
+            } else { document.getElementById('teacher_id_error').textContent = ''; }
+
+            let date = document.getElementById('attendance_date').value;
+            if(date === '') {
+                document.getElementById('date_error').textContent = 'Date is required!';
+                valid = false;
+            } else { document.getElementById('date_error').textContent = ''; }
+
+            let status = document.getElementById('status').value;
+            if(status === '') {
+                document.getElementById('status_error').textContent = 'Please select a status!';
+                valid = false;
+            } else { document.getElementById('status_error').textContent = ''; }
+
+            if(valid) {
+                alert('Attendance added successfully!');
+                window.location = 'attendance_list.html';
+            }
+        }
+    </script>
+</body>
+</html>
