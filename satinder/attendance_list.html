@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edu Team - Student Record System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f0f0f5; }
+        .navbar {
+            background: #4a235a; padding: 14px 24px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .navbar-left { color: white; font-size: 16px; font-weight: 500; }
+        .navbar-right { display: flex; align-items: center; gap: 20px; }
+        .navbar-right a { color: #ddd; font-size: 13px; text-decoration: none; }
+        .avatar {
+            width: 30px; height: 30px; border-radius: 50%;
+            background: #6b3580; display: flex;
+            align-items: center; justify-content: center;
+            color: white; font-size: 12px; font-weight: 500;
+        }
+        .content { padding: 24px; }
+        .header {
+            display: flex; justify-content: space-between;
+            align-items: flex-start; margin-bottom: 20px;
+        }
+        .page-title { font-size: 20px; font-weight: 500; color: #333; margin-bottom: 4px; }
+        .page-subtitle { font-size: 13px; color: #999; }
+        .add-btn {
+            background: #4a235a; color: white;
+            padding: 10px 18px; border: none;
+            border-radius: 8px; font-size: 13px;
+            cursor: pointer; text-decoration: none;
+        }
+        .card { background: white; border: 1px solid #eee; border-radius: 12px; overflow: hidden; }
+        .card-header {
+            padding: 14px 16px; border-bottom: 1px solid #eee;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .card-header p { font-size: 14px; font-weight: 500; color: #333; }
+        .search-input {
+            padding: 7px 12px; border: 1px solid #eee;
+            border-radius: 8px; font-size: 13px;
+            width: 200px; outline: none; background: #f9f9f9;
+        }
+        .filter-select {
+            padding: 7px 12px; border: 1px solid #eee;
+            border-radius: 8px; font-size: 13px;
+            outline: none; background: #f9f9f9;
+            margin-left: 8px;
+        }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        thead { background: #f9f9f9; }
+        th { text-align: left; padding: 10px 16px; color: #999; font-weight: 500; }
+        td { padding: 12px 16px; border-bottom: 1px solid #f5f5f5; }
+        .badge-present { background: #e8f5e9; color: #2e7d32; padding: 3px 10px; border-radius: 10px; font-size: 11px; }
+        .badge-absent { background: #fce4ec; color: #c62828; padding: 3px 10px; border-radius: 10px; font-size: 11px; }
+        .badge-late { background: #fff8e1; color: #f57f17; padding: 3px 10px; border-radius: 10px; font-size: 11px; }
+        .badge-warning { background: #fce4ec; color: #c62828; padding: 3px 10px; border-radius: 10px; font-size: 11px; }
+        .badge-ok { background: #e8f5e9; color: #2e7d32; padding: 3px 10px; border-radius: 10px; font-size: 11px; }
+        .edit-btn { background: #e3f2fd; color: #1565c0; padding: 4px 10px; border: none; border-radius: 5px; cursor: pointer; font-size: 12px; margin-right: 4px; }
+        .delete-btn { background: #fce4ec; color: #c62828; padding: 4px 10px; border: none; border-radius: 5px; cursor: pointer; font-size: 12px; }
+        .card-footer { padding: 12px 16px; border-top: 1px solid #eee; }
+        .card-footer p { font-size: 12px; color: #999; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <span class="navbar-left">Edu Team - Student Record System</span>
+        <div class="navbar-right">
+            <a href="../sita/dashboard.html">Dashboard</a>
+            <a href="../deepa/student_list.html">Students</a>
+            <a href="../binu/grade_list.html">Grades</a>
+            <a href="../isha/course_list.html">Courses</a>
+            <div class="avatar">ST</div>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="header">
+            <div>
+                <p class="page-title">Attendance Management</p>
+                <p class="page-subtitle">Developer: Satinder Singh Tanwar | SRS-87</p>
+            </div>
+            <a href="add_attendance.html" class="add-btn">+ Add Attendance</a>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <p>All Attendance Records</p>
+                <div>
+                    <input type="text" class="search-input"
+                        placeholder="Search by Student ID..."
+                        onkeyup="filterTable()">
+                    <select class="filter-select" onchange="filterTable()" id="statusFilter">
+                        <option value="">-- All Status --</option>
+                        <option value="Present">Present</option>
+                        <option value="Absent">Absent</option>
+                        <option value="Late">Late</option>
+                    </select>
+                </div>
+            </div>
+
+            <table id="attendanceTable">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Student ID</th>
+                        <th>Teacher ID</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Absence %</th>
+                        <th>Warning</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="color:#999">1</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td style="color:#999">2026-05-05</td>
+                        <td><span class="badge-present">Present</span></td>
+                        <td style="color:#999">0.00%</td>
+                        <td><span class="badge-ok">No</span></td>
+                        <td>
+                            <button class="edit-btn" onclick="window.location='edit_attendance.html'">Edit</button>
+                            <button class="delete-btn" onclick="deleteRow(this)">Delete</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="color:#999">2</td>
+                        <td>2</td>
+                        <td>1</td>
+                        <td style="color:#999">2026-05-05</td>
+                        <td><span class="badge-absent">Absent</span></td>
+                        <td style="color:#999">100.00%</td>
+                        <td><span class="badge-warning">⚠️ Yes</span></td>
+                        <td>
+                            <button class="edit-btn" onclick="window.location='edit_attendance.html'">Edit</button>
+                            <button class="delete-btn" onclick="deleteRow(this)">Delete</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="color:#999">3</td>
+                        <td>3</td>
+                        <td>1</td>
+                        <td style="color:#999">2026-05-05</td>
+                        <td><span class="badge-late">Late</span></td>
+                        <td style="color:#999">0.00%</td>
+                        <td><span class="badge-ok">No</span></td>
+                        <td>
+                            <button class="edit-btn" onclick="window.location='edit_attendance.html'">Edit</button>
+                            <button class="delete-btn" onclick="deleteRow(this)">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="card-footer">
+                <p>Showing 3 attendance records</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function filterTable() {
+            let search = document.querySelector('.search-input').value.toLowerCase();
+            let status = document.getElementById('statusFilter').value.toLowerCase();
+            let rows = document.querySelectorAll('#attendanceTable tbody tr');
+            rows.forEach(row => {
+                let studentId = row.cells[1].textContent.toLowerCase();
+                let rowStatus = row.cells[4].textContent.toLowerCase();
+                let matchSearch = studentId.includes(search);
+                let matchStatus = status === '' || rowStatus.includes(status);
+                row.style.display = matchSearch && matchStatus ? '' : 'none';
+            });
+        }
+        function deleteRow(btn) {
+            if(confirm('Are you sure you want to delete?')) {
+                btn.closest('tr').remove();
+            }
+        }
+    </script>
+</body>
+</html>
