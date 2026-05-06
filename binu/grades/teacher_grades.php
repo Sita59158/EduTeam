@@ -279,7 +279,7 @@
     loadGrades();
 
     function loadGrades() {
-        fetch('list.php')
+        fetch('grade_list.php')
             .then(r => r.json())
             .then(data => {
                 allData = data;
@@ -412,7 +412,7 @@
         data.append('grade_id',   document.getElementById('edit_grade_id').value);
         data.append('mid_term',   document.getElementById('edit_mid').value);
         data.append('final_term', document.getElementById('edit_final').value);
-        fetch('edit.php', { method: 'POST', body: data })
+        fetch('edit_grade.php', { method: 'POST', body: data })
             .then(r => r.json())
             .then(res => {
                 const msg = document.getElementById('editMsg');
@@ -465,7 +465,7 @@
         data.append('course_id',  document.getElementById('course_id').value);
         data.append('mid_term',   document.getElementById('mid_term').value);
         data.append('final_term', document.getElementById('final_term').value);
-        fetch('add.php', { method: 'POST', body: data })
+        fetch('add_grade.php', { method: 'POST', body: data })
             .then(r => r.json())
             .then(res => {
                 const msg = document.getElementById('formMsg');
@@ -492,7 +492,7 @@
 
     function deleteGrade(id) {
         if (!confirm('Delete this grade record?')) return;
-        fetch('delete.php', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: 'grade_id=' + id })
+        fetch('delete_grade.php', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: 'grade_id=' + id })
             .then(r => r.json())
             .then(res => { if (res.success) loadGrades(); else alert('Error: ' + res.error); });
     }

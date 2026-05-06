@@ -146,7 +146,7 @@
         const sid = document.getElementById('sid-input').value.trim();
         if (!sid) { document.getElementById('hint').textContent = '⚠ Please enter a Student ID'; return; }
         document.getElementById('hint').textContent = 'Loading...';
-        fetch('list.php?student_id=' + sid)
+        fetch('grade_list.php?student_id=' + sid)
             .then(r => r.json())
             .then(data => {
                 if (data.length === 0) {

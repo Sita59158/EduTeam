@@ -142,7 +142,7 @@
         }
         err.style.display = 'none';
 
-        fetch('list.php?student_id=' + sid)
+        fetch('grade_list.php?student_id=' + sid)
             .then(r => r.json())
             .then(data => {
                 const summary    = document.getElementById('summary');
