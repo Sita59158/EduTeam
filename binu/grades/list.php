@@ -1,5 +1,5 @@
 <?php
-require_once '../config/db.php';
+require_once '../../db.php';
 header('Content-Type: application/json');
 
 $student_id = $_GET['student_id'] ?? '';
