@@ -4,6 +4,7 @@ header('Content-Type: application/json');
 
 $data       = json_decode(file_get_contents("php://input"), true);
 
+$grade_id   = $data['grade_id'];
 $student_id = $data['student_id'];
 $course_id  = $data['course_id'];
 $mid_term   = $data['mid_term'];
@@ -20,12 +21,12 @@ $total_grade = $mid_term + $final_term;
 $percentage  = ($total_grade / 200) * 100;
 $is_passed   = $percentage >= 50 ? 1 : 0;
 
-$stmt = $conn->prepare("INSERT INTO grade (student_id, course_id, mid_term, final_term, total_grade, percentage, is_passed) VALUES (?, ?, ?, ?, ?, ?, ?)");
-$stmt->bind_param("iiddddi", $student_id, $course_id, $mid_term, $final_term, $total_grade, $percentage, $is_passed);
+$stmt = $conn->prepare("UPDATE grade SET student_id=?, course_id=?, mid_term=?, final_term=?, total_grade=?, percentage=?, is_passed=? WHERE grade_id=?");
+$stmt->bind_param("iiddddii", $student_id, $course_id, $mid_term, $final_term, $total_grade, $percentage, $is_passed, $grade_id);
 
 if ($stmt->execute()) {
-    echo json_encode(["success" => "Grade added successfully"]);
+    echo json_encode(["success" => "Grade updated successfully"]);
 } else {
-    echo json_encode(["error" => "Failed to add grade"]);
+    echo json_encode(["error" => "Failed to update grade"]);
 }
 ?>
