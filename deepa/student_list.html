@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html>
 <head>
@@ -5,6 +6,18 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: Arial, sans-serif; background: #f0f0f5; }
+=======
+<<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Profile Management</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: Arial, sans-serif; 
+            background: #f0f0f5; 
+        }
+>>>>>>> 5955c2237e35e9b76fadab384aabaefa2d294ce4
         .navbar {
             background: #4a235a;
             padding: 14px 24px;
@@ -12,6 +25,7 @@
             justify-content: space-between;
             align-items: center;
         }
+<<<<<<< HEAD
         .navbar-left { color: white; font-size: 16px; font-weight: 500; }
         .navbar-right { display: flex; align-items: center; gap: 20px; }
         .navbar-right a { color: #ddd; font-size: 13px; text-decoration: none; }
@@ -73,6 +87,191 @@
             <a href="../sita/dashboard.html">Dashboard</a>
             <a href="../binu/grade_list.html">Grades</a>
             <a href="../satinder/attendance_list.html">Attendance</a>
+=======
+        .navbar-left { 
+            color: white; 
+            font-size: 16px; 
+            font-weight: 500; 
+        }
+        .navbar-right { 
+            display: flex; 
+            align-items: center; 
+            gap: 20px; 
+        }
+        .navbar-right a { 
+            color: #ddd; 
+            font-size: 13px; 
+            text-decoration: none; 
+        }
+        .avatar {
+            width: 30px; height: 30px;
+            border-radius: 50%;
+            background: #6b3580;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .content { padding: 24px; }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+        .page-title { 
+            font-size: 20px; 
+            font-weight: 500; 
+            color: #333; 
+            margin-bottom: 4px; 
+        }
+        .page-subtitle { 
+            font-size: 13px; 
+            color: #999; 
+        }
+        .add-btn {
+            background: #4a235a;
+            color: white;
+            padding: 10px 18px;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .card {
+            background: white;
+            border: 1px solid #eee;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .card-header {
+            padding: 14px 16px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card-header p { 
+            font-size: 14px; 
+            font-weight: 500; 
+            color: #333; 
+        }
+        .search-input {
+            padding: 7px 12px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            font-size: 13px;
+            width: 200px;
+            outline: none;
+            background: #f9f9f9;
+        }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            font-size: 13px; 
+        }
+        thead { background: #f9f9f9; }
+        th {
+            text-align: left;
+            padding: 10px 16px;
+            color: #999;
+            font-weight: 500;
+        }
+        td { 
+            padding: 12px 16px; 
+            border-bottom: 1px solid #f5f5f5; 
+        }
+        .student-info { 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+        }
+        .student-avatar {
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .badge-active {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-size: 11px;
+        }
+        .badge-inactive {
+            background: #fce4ec;
+            color: #c62828;
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-size: 11px;
+        }
+        .edit-btn {
+            background: #e3f2fd;
+            color: #1565c0;
+            padding: 4px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-right: 4px;
+        }
+        .delete-btn {
+            background: #fce4ec;
+            color: #c62828;
+            padding: 4px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .card-footer {
+            padding: 12px 16px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card-footer p { 
+            font-size: 12px; 
+            color: #999; 
+        }
+        .pagination { 
+            display: flex; 
+            gap: 6px; 
+        }
+        .page-btn {
+            padding: 5px 10px;
+            border: 1px solid #eee;
+            border-radius: 6px;
+            background: white;
+            font-size: 12px;
+            cursor: pointer;
+            color: #333;
+        }
+        .page-btn.active {
+            background: #4a235a;
+            color: white;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <span class="navbar-left">Student Record System</span>
+        <div class="navbar-right">
+            <a href="../sita/dashboard.html">Dashboard</a>
+            <a href="../binu/grade_list.html">Grades</a>
+            <a href="../satinder/attendance_list.html">
+                Attendance</a>
+>>>>>>> 5955c2237e35e9b76fadab384aabaefa2d294ce4
             <div class="avatar">DT</div>
         </div>
     </div>
@@ -80,10 +279,21 @@
     <div class="content">
         <div class="header">
             <div>
+<<<<<<< HEAD
                 <p class="page-title">Student Profile Management</p>
                 <p class="page-subtitle">Developer: Deepa Thapa | SRS-19</p>
             </div>
             <a href="add_student.html" class="add-btn">+ Add New Student</a>
+=======
+                <p class="page-title">
+                    Student Profile Management</p>
+                <p class="page-subtitle">
+                    Developer: Deepa Thapa | SRS-19</p>
+            </div>
+            <a href="add_student.html" class="add-btn">
+                + Add New Student
+            </a>
+>>>>>>> 5955c2237e35e9b76fadab384aabaefa2d294ce4
         </div>
 
         <div class="card">
@@ -110,6 +320,7 @@
                         <td style="color:#999">1</td>
                         <td>
                             <div class="student-info">
+<<<<<<< HEAD
                                 <div class="student-avatar" style="background:#f3eaf7; color:#4a235a">JD</div>
                                 <span style="font-weight:500">John Doe</span>
                             </div>
@@ -120,12 +331,36 @@
                         <td>
                             <button class="edit-btn" onclick="window.location='edit_student.html'">Edit</button>
                             <button class="delete-btn" onclick="deleteRow(this)">Delete</button>
+=======
+                                <div class="student-avatar"
+                                    style="background:#f3eaf7;
+                                    color:#4a235a">JD</div>
+                                <span style="font-weight:500">
+                                    John Doe</span>
+                            </div>
+                        </td>
+                        <td style="color:#999">
+                            john@email.com</td>
+                        <td style="color:#999">
+                            01 Jan 2026</td>
+                        <td><span class="badge-active">
+                            Active</span></td>
+                        <td>
+                            <button class="edit-btn"
+                                onclick="window.location=
+                                'edit_student.html'">
+                                Edit</button>
+                            <button class="delete-btn"
+                                onclick="deleteRow(this)">
+                                Delete</button>
+>>>>>>> 5955c2237e35e9b76fadab384aabaefa2d294ce4
                         </td>
                     </tr>
                     <tr>
                         <td style="color:#999">2</td>
                         <td>
                             <div class="student-info">
+<<<<<<< HEAD
                                 <div class="student-avatar" style="background:#e3f2fd; color:#1565c0">JS</div>
                                 <span style="font-weight:500">Jane Smith</span>
                             </div>
@@ -136,12 +371,36 @@
                         <td>
                             <button class="edit-btn" onclick="window.location='edit_student.html'">Edit</button>
                             <button class="delete-btn" onclick="deleteRow(this)">Delete</button>
+=======
+                                <div class="student-avatar"
+                                    style="background:#e3f2fd;
+                                    color:#1565c0">JS</div>
+                                <span style="font-weight:500">
+                                    Jane Smith</span>
+                            </div>
+                        </td>
+                        <td style="color:#999">
+                            jane@email.com</td>
+                        <td style="color:#999">
+                            15 Jan 2026</td>
+                        <td><span class="badge-active">
+                            Active</span></td>
+                        <td>
+                            <button class="edit-btn"
+                                onclick="window.location=
+                                'edit_student.html'">
+                                Edit</button>
+                            <button class="delete-btn"
+                                onclick="deleteRow(this)">
+                                Delete</button>
+>>>>>>> 5955c2237e35e9b76fadab384aabaefa2d294ce4
                         </td>
                     </tr>
                     <tr>
                         <td style="color:#999">3</td>
                         <td>
                             <div class="student-info">
+<<<<<<< HEAD
                                 <div class="student-avatar" style="background:#fce4ec; color:#c62828">ML</div>
                                 <span style="font-weight:500">Mark Lee</span>
                             </div>
@@ -152,12 +411,36 @@
                         <td>
                             <button class="edit-btn" onclick="window.location='edit_student.html'">Edit</button>
                             <button class="delete-btn" onclick="deleteRow(this)">Delete</button>
+=======
+                                <div class="student-avatar"
+                                    style="background:#fce4ec;
+                                    color:#c62828">ML</div>
+                                <span style="font-weight:500">
+                                    Mark Lee</span>
+                            </div>
+                        </td>
+                        <td style="color:#999">
+                            mark@email.com</td>
+                        <td style="color:#999">
+                            01 Feb 2026</td>
+                        <td><span class="badge-inactive">
+                            Inactive</span></td>
+                        <td>
+                            <button class="edit-btn"
+                                onclick="window.location=
+                                'edit_student.html'">
+                                Edit</button>
+                            <button class="delete-btn"
+                                onclick="deleteRow(this)">
+                                Delete</button>
+>>>>>>> 5955c2237e35e9b76fadab384aabaefa2d294ce4
                         </td>
                     </tr>
                     <tr>
                         <td style="color:#999">4</td>
                         <td>
                             <div class="student-info">
+<<<<<<< HEAD
                                 <div class="student-avatar" style="background:#e8f5e9; color:#2e7d32">SP</div>
                                 <span style="font-weight:500">Sara Patel</span>
                             </div>
@@ -168,6 +451,29 @@
                         <td>
                             <button class="edit-btn" onclick="window.location='edit_student.html'">Edit</button>
                             <button class="delete-btn" onclick="deleteRow(this)">Delete</button>
+=======
+                                <div class="student-avatar"
+                                    style="background:#e8f5e9;
+                                    color:#2e7d32">SP</div>
+                                <span style="font-weight:500">
+                                    Sara Patel</span>
+                            </div>
+                        </td>
+                        <td style="color:#999">
+                            sara@email.com</td>
+                        <td style="color:#999">
+                            10 Feb 2026</td>
+                        <td><span class="badge-active">
+                            Active</span></td>
+                        <td>
+                            <button class="edit-btn"
+                                onclick="window.location=
+                                'edit_student.html'">
+                                Edit</button>
+                            <button class="delete-btn"
+                                onclick="deleteRow(this)">
+                                Delete</button>
+>>>>>>> 5955c2237e35e9b76fadab384aabaefa2d294ce4
                         </td>
                     </tr>
                 </tbody>
@@ -187,6 +493,7 @@
 
     <script>
         function searchTable() {
+<<<<<<< HEAD
             let input = document.querySelector('.search-input').value.toLowerCase();
             let rows = document.querySelectorAll('#studentTable tbody tr');
             rows.forEach(row => {
@@ -194,6 +501,20 @@
                 row.style.display = name.includes(input) ? '' : 'none';
             });
         }
+=======
+            let input = document.querySelector(
+                '.search-input').value.toLowerCase();
+            let rows = document.querySelectorAll(
+                '#studentTable tbody tr');
+            rows.forEach(row => {
+                let name = row.cells[1].textContent
+                    .toLowerCase();
+                row.style.display = name.includes(input) 
+                    ? '' : 'none';
+            });
+        }
+
+>>>>>>> 5955c2237e35e9b76fadab384aabaefa2d294ce4
         function deleteRow(btn) {
             if(confirm('Are you sure you want to delete?')) {
                 btn.closest('tr').remove();

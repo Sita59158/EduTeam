@@ -1,22 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
+<<<<<<< HEAD
     <title>Edu Team - Student Record System</title>
+=======
+    <title>Edit Student</title>
+>>>>>>> 5955c2237e35e9b76fadab384aabaefa2d294ce4
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: Arial, sans-serif;
             background: #f0f0f5;
+<<<<<<< HEAD
             display: flex; flex-direction: column; min-height: 100vh;
         }
         .navbar {
             background: #4a235a; padding: 14px 24px;
             display: flex; justify-content: space-between; align-items: center;
+=======
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .navbar {
+            background: #4a235a;
+            padding: 14px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+>>>>>>> 5955c2237e35e9b76fadab384aabaefa2d294ce4
         }
         .navbar span { color: white; font-size: 16px; font-weight: 500; }
         .navbar-right { display: flex; align-items: center; gap: 20px; }
         .navbar-right a { color: #ddd; font-size: 13px; text-decoration: none; }
         .avatar {
+<<<<<<< HEAD
             width: 30px; height: 30px; border-radius: 50%;
             background: #6b3580; display: flex;
             align-items: center; justify-content: center;
@@ -33,11 +51,65 @@
         .update-btn:hover { background: #1976d2; }
         .back-link { display: block; text-align: center; margin-top: 15px; color: #4a235a; text-decoration: none; font-size: 13px; }
         .error { color: red; font-size: 12px; margin-top: -10px; margin-bottom: 10px; display: block; }
+=======
+            width: 30px; height: 30px;
+            border-radius: 50%;
+            background: #6b3580;
+            display: flex; align-items: center;
+            justify-content: center;
+            color: white; font-size: 12px; font-weight: 500;
+        }
+        .content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 24px;
+        }
+        .card {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            width: 480px;
+            border: 1px solid #eee;
+        }
+        h1 { text-align: center; color: #4a235a;
+             font-size: 22px; margin-bottom: 5px; }
+        .subtitle { text-align: center; color: #999;
+                    font-size: 13px; margin-bottom: 25px; }
+        label { display: block; font-weight: 500;
+                margin-bottom: 5px; color: #333; font-size: 14px; }
+        input, select {
+            width: 100%; padding: 11px 14px;
+            border: 1px solid #ddd; border-radius: 8px;
+            font-size: 14px; margin-bottom: 15px; outline: none;
+        }
+        input:focus, select:focus { border-color: #4a235a; }
+        .update-btn {
+            width: 100%; padding: 13px;
+            background: #1565c0; color: white;
+            border: none; border-radius: 8px;
+            font-size: 15px; cursor: pointer; margin-top: 5px;
+        }
+        .update-btn:hover { background: #1976d2; }
+        .back-link {
+            display: block; text-align: center;
+            margin-top: 15px; color: #4a235a;
+            text-decoration: none; font-size: 13px;
+        }
+        .error { color: red; font-size: 12px;
+                 margin-top: -10px; margin-bottom: 10px;
+                 display: block; }
+>>>>>>> 5955c2237e35e9b76fadab384aabaefa2d294ce4
     </style>
 </head>
 <body>
     <div class="navbar">
+<<<<<<< HEAD
         <span>Edu Team - Student Record System</span>
+=======
+        <span>Student Record System</span>
+>>>>>>> 5955c2237e35e9b76fadab384aabaefa2d294ce4
         <div class="navbar-right">
             <a href="../sita/dashboard.html">Dashboard</a>
             <a href="student_list.html">Students</a>
@@ -49,6 +121,7 @@
         <div class="card">
             <h1>Edit Student</h1>
             <p class="subtitle">Developer: Deepa Thapa | SRS-19</p>
+<<<<<<< HEAD
             <form onsubmit="validateForm(event)">
                 <label>Full Name:</label>
                 <input type="text" id="full_name" value="John Doe" required>
@@ -68,6 +141,33 @@
 
                 <label>Enrolled Date:</label>
                 <input type="date" id="enrolled_date" value="2026-01-01" required>
+=======
+
+            <form onsubmit="validateForm(event)">
+                <label>Full Name:</label>
+                <input type="text" id="full_name"
+                       value="John Doe" required>
+                <span class="error" id="full_name_error"></span>
+
+                <label>Email:</label>
+                <input type="email" id="email"
+                       value="john@email.com" required>
+                <span class="error" id="email_error"></span>
+
+                <label>Teacher ID:</label>
+                <input type="number" id="teacher_id"
+                       value="1" required>
+                <span class="error" id="teacher_id_error"></span>
+
+                <label>Course ID:</label>
+                <input type="number" id="course_id"
+                       value="1" required>
+                <span class="error" id="course_id_error"></span>
+
+                <label>Enrolled Date:</label>
+                <input type="date" id="enrolled_date"
+                       value="2026-01-01" required>
+>>>>>>> 5955c2237e35e9b76fadab384aabaefa2d294ce4
 
                 <label>Status:</label>
                 <select id="is_active">
@@ -75,8 +175,17 @@
                     <option value="0">Inactive</option>
                 </select>
 
+<<<<<<< HEAD
                 <button type="submit" class="update-btn">Update Student</button>
                 <a href="student_list.html" class="back-link">&larr; Back to All Students</a>
+=======
+                <button type="submit" class="update-btn">
+                    Update Student
+                </button>
+                <a href="student_list.html" class="back-link">
+                    ← Back to All Students
+                </a>
+>>>>>>> 5955c2237e35e9b76fadab384aabaefa2d294ce4
             </form>
         </div>
     </div>
@@ -85,6 +194,7 @@
         function validateForm(event) {
             event.preventDefault();
             let valid = true;
+<<<<<<< HEAD
             let fullName = document.getElementById('full_name').value;
             if(fullName === '') {
                 document.getElementById('full_name_error').textContent = 'Full name is required!';
@@ -95,6 +205,30 @@
                 document.getElementById('email_error').textContent = 'Email is required!';
                 valid = false;
             } else { document.getElementById('email_error').textContent = ''; }
+=======
+
+            let fullName = document.getElementById(
+                'full_name').value;
+            if(fullName === '') {
+                document.getElementById('full_name_error')
+                .textContent = 'Full name is required!';
+                valid = false;
+            } else {
+                document.getElementById('full_name_error')
+                .textContent = '';
+            }
+
+            let email = document.getElementById('email').value;
+            if(email === '') {
+                document.getElementById('email_error')
+                .textContent = 'Email is required!';
+                valid = false;
+            } else {
+                document.getElementById('email_error')
+                .textContent = '';
+            }
+
+>>>>>>> 5955c2237e35e9b76fadab384aabaefa2d294ce4
             if(valid) {
                 alert('Student updated successfully!');
                 window.location = 'student_list.html';
