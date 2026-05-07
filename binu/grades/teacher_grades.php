@@ -279,7 +279,11 @@
     loadGrades();
 
     function loadGrades() {
+<<<<<<< HEAD
         fetch('list.php')
+=======
+        fetch('grade_list.php')
+>>>>>>> ba5326336744b8692eb3be15b07a316f35b9e035
             .then(r => r.json())
             .then(data => {
                 allData = data;
@@ -412,7 +416,11 @@
         data.append('grade_id',   document.getElementById('edit_grade_id').value);
         data.append('mid_term',   document.getElementById('edit_mid').value);
         data.append('final_term', document.getElementById('edit_final').value);
+<<<<<<< HEAD
         fetch('edit.php', { method: 'POST', body: data })
+=======
+        fetch('edit_grade.php', { method: 'POST', body: data })
+>>>>>>> ba5326336744b8692eb3be15b07a316f35b9e035
             .then(r => r.json())
             .then(res => {
                 const msg = document.getElementById('editMsg');
@@ -465,7 +473,11 @@
         data.append('course_id',  document.getElementById('course_id').value);
         data.append('mid_term',   document.getElementById('mid_term').value);
         data.append('final_term', document.getElementById('final_term').value);
+<<<<<<< HEAD
         fetch('add.php', { method: 'POST', body: data })
+=======
+        fetch('add_grade.php', { method: 'POST', body: data })
+>>>>>>> ba5326336744b8692eb3be15b07a316f35b9e035
             .then(r => r.json())
             .then(res => {
                 const msg = document.getElementById('formMsg');
@@ -492,7 +504,11 @@
 
     function deleteGrade(id) {
         if (!confirm('Delete this grade record?')) return;
+<<<<<<< HEAD
         fetch('delete.php', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: 'grade_id=' + id })
+=======
+        fetch('delete_grade.php', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: 'grade_id=' + id })
+>>>>>>> ba5326336744b8692eb3be15b07a316f35b9e035
             .then(r => r.json())
             .then(res => { if (res.success) loadGrades(); else alert('Error: ' + res.error); });
     }

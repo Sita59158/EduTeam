@@ -142,7 +142,11 @@
         }
         err.style.display = 'none';
 
+<<<<<<< HEAD
         fetch('list.php?student_id=' + sid)
+=======
+        fetch('grade_list.php?student_id=' + sid)
+>>>>>>> ba5326336744b8692eb3be15b07a316f35b9e035
             .then(r => r.json())
             .then(data => {
                 const summary    = document.getElementById('summary');

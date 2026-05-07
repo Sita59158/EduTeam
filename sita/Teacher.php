@@ -15,10 +15,10 @@ class Teacher {
 
     // Get all teachers with optional search and filter
     public function getAllTeachers($search = '', $filter = '') {
-        // Base query
+        // Base query - WHERE 1=1 allows easy AND conditions
         $query = "SELECT * FROM Teacher WHERE 1=1";
 
-        // Add search by name
+        // Add search by first or last name
         if($search != '') {
             $query .= " AND (first_name LIKE '%$search%' 
                         OR last_name LIKE '%$search%')";
@@ -43,6 +43,7 @@ class Teacher {
     }
 
     // Add new teacher to database
+    // MD5() encrypts password before saving
     public function addTeacher($data) {
         $query = "INSERT INTO Teacher 
         (first_name, last_name, email, 
