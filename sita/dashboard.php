@@ -74,8 +74,8 @@ $enrolledStudents = $teacherObj->getEnrolledStudents($teacher_id);
         /* Quick links section */
         .section-title { font-size: 16px; font-weight: 500; color: #333; margin-bottom: 16px; }
 
-        /* Grid of quick link cards */
-        .links-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+        /* Grid of quick link cards - 5 columns for all modules */
+        .links-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
 
         /* Quick link card */
         .link-card {
@@ -101,8 +101,10 @@ $enrolledStudents = $teacherObj->getEnrolledStudents($teacher_id);
             <a href="teacher_list.php">Teachers</a>
             <a href="../deepa/student_list.php">Students</a>
             <a href="../isha/course_list.php">Courses</a>
+            <a href="../binu/grades/grade_list.php">Grades</a>
+            <a href="../satinder/attendance_list.php">Attendance</a>
             <a href="../isha/logout.php">Logout</a>
-            <!-- Show logged in teacher initials -->
+            <!-- Show logged in teacher initials from session -->
             <div class="avatar">
                 <?php echo strtoupper(substr($teacher['first_name'], 0, 1) . substr($teacher['last_name'], 0, 1)); ?>
             </div>
@@ -150,6 +152,16 @@ $enrolledStudents = $teacherObj->getEnrolledStudents($teacher_id);
                 <div class="icon">📚</div>
                 <p>Courses</p>
                 <span>View course records</span>
+            </a>
+            <a href="../binu/grades/grade_list.php" class="link-card">
+                <div class="icon">📝</div>
+                <p>Grades</p>
+                <span>View grade records</span>
+            </a>
+            <a href="../satinder/attendance_list.php" class="link-card">
+                <div class="icon">📅</div>
+                <p>Attendance</p>
+                <span>View attendance records</span>
             </a>
         </div>
 
