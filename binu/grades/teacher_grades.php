@@ -412,7 +412,7 @@
         data.append('grade_id',   document.getElementById('edit_grade_id').value);
         data.append('mid_term',   document.getElementById('edit_mid').value);
         data.append('final_term', document.getElementById('edit_final').value);
-        fetch('edit.php', { method: 'POST', body: data })
+        fetch('edit_grade.php, { method: 'POST', body: data })
             .then(r => r.json())
             .then(res => {
                 const msg = document.getElementById('editMsg');
