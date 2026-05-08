@@ -1,0 +1,1 @@
+<?php include 'db.php'; $conn->query('CREATE TABLE IF NOT EXISTS grade (grade_id INT AUTO_INCREMENT PRIMARY KEY, student_id INT, teacher_id INT, subject VARCHAR(100), grade VARCHAR(10), remarks VARCHAR(200))'); echo 'Done!'; ?>

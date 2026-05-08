@@ -19,13 +19,11 @@ $username = 'root';
 $password = '';
 
 // Create connection to MySQL
-$conn = mysqli_connect($host, $username, 
-                       $password, $dbname);
+$conn = new mysqli($host, $username, $password, $dbname);
 
 // Check connection was successful
-if(!$conn) {
-    die('Connection failed: ' . 
-    mysqli_connect_error());
+if($conn->connect_error) {
+    die('Connection failed: ' . $conn->connect_error);
 }
 // Connection successful!
 ?>
