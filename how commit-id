@@ -1,0 +1,11 @@
+[33m1940fa3[m Deepa - completed Binu grade pages and fixed db.php
+[33mdddeb3b[m Deepa - completed Binu grade pages and fixed db.php
+[33m43ed8ac[m Binu - fixed add_grade.php correct version
+[33ma6d65f8[m Binu - resolved merge conflict in add_grade.php
+[33me99e094[m Binu - fixed grade_list to use mysqli
+[33m4bdeae2[m resolved merge conflicts - kept team files
+[33m2b1b990[m Binu - added all grade HTML and PHP pages
+[33m09d0417[m Binu - purple Edu Team design applied to all grade pages
+[33medf9ca9[m Binu - updated db path to use shared db.php
+[33mcd45438[m Binu - add readme to binu folder
+[33m48e0375[m Binu - added binu folder to main
