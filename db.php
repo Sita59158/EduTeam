@@ -1,29 +1,23 @@
+
+Isha Dhakal
+10:35 AM (1 minute ago)
+to me
+
 <?php
-// ============================================
-// db.php - Database Connection File
+// Database Connection File
 // Shared by all modules
 // Project: Edu Team - Student Record System
-// Developer: EduTeam
-// ============================================
 
-// Database host
 $host = 'localhost';
-
-// Database name
 $dbname = 'student_record_system';
-
-// Database username
 $username = 'root';
-
-// Database password
 $password = '';
 
-// Create connection to MySQL
-$conn = new mysqli($host, $username, $password, $dbname);
+// Create connection using mysqli_connect
+$conn = mysqli_connect($host, $username, $password, $dbname);
 
-// Check connection was successful
-if($conn->connect_error) {
-    die('Connection failed: ' . $conn->connect_error);
+// Check connection
+if(!$conn) {
+    die('Connection failed: ' . mysqli_connect_error());
 }
-// Connection successful!
 ?>
