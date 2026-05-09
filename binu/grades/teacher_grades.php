@@ -465,11 +465,7 @@
         data.append('course_id',  document.getElementById('course_id').value);
         data.append('mid_term',   document.getElementById('mid_term').value);
         data.append('final_term', document.getElementById('final_term').value);
-<<<<<<< HEAD
-        fetch('add.php', { method: 'POST', body: data })
-=======
-        fetch('add_grade.php', { method: 'POST', body: data })
->>>>>>> ba5326336744b8692eb3be15b07a316f35b9e035
+fetch('add_grade.php', { method: 'POST', body: data })
             .then(r => r.json())
             .then(res => {
                 const msg = document.getElementById('formMsg');
@@ -496,11 +492,7 @@
 
     function deleteGrade(id) {
         if (!confirm('Delete this grade record?')) return;
-<<<<<<< HEAD
-        fetch('delete.php', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: 'grade_id=' + id })
-=======
-        fetch('delete_grade.php', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: 'grade_id=' + id })
->>>>>>> ba5326336744b8692eb3be15b07a316f35b9e035
+fetch('delete_grade.php', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: 'grade_id=' + id })
             .then(r => r.json())
             .then(res => { if (res.success) loadGrades(); else alert('Error: ' + res.error); });
     }
