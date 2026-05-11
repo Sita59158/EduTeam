@@ -4,15 +4,12 @@
 // MODULE: Grade & Result Tracking
 // PROJECT: EduTeam - Student Record System
 // DEVELOPER: Binu Karki
-// LAYER: Middle Layer (Business Logic) + Presentation Layer
+// LAYER: Presentation Layer
 // DESCRIPTION: Login page for Grade module
-//              Teachers and Students login here
+//              Uses Grade class (middle layer) for authentication
 // ============================================================
 
-// -----------------------------------------------
-// MIDDLE LAYER: Session Management
-// Start session to store login info
-// -----------------------------------------------
+// MIDDLE LAYER: Start session to store login info
 session_start();
 
 // If already logged in, redirect to correct dashboard
@@ -25,49 +22,37 @@ if (isset($_SESSION['grade_user'])) {
     exit();
 }
 
-// -----------------------------------------------
-// DATA LAYER: Database Connection
-// Include shared db.php - uses $conn (procedural)
-// -----------------------------------------------
+// DATA LAYER: Include shared database connection
 require_once '../../db.php';
+
+// MIDDLE LAYER: Include Grade class
+require_once 'Grade.php';
+
+// Create Grade object - passing $conn to constructor
+$gradeObj = new Grade($conn);
 
 $error = '';
 
 // ============================================================
-// MIDDLE LAYER: Handle Login Form Submission
-// Validates input and checks credentials in database
+// PRESENTATION LAYER: Handle Login Form Submission
+// Calls Grade class login() method to verify credentials
 // ============================================================
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    // Sanitize inputs to prevent XSS
+    // Sanitize inputs
     $username = trim($_POST['username']);
     $password = trim($_POST['password']);
 
-    // Validation: check fields are not empty
+    // Validate fields are not empty
     if (empty($username) || empty($password)) {
         $error = "Please enter both username and password.";
     } else {
 
-        // DATA LAYER: Prepared statement to check login credentials
-        // Parameterized query prevents SQL injection
-        $stmt = mysqli_prepare($conn,
-            "SELECT * FROM grade_users WHERE username = ? AND password = ?"
-        );
+        // MIDDLE LAYER: Call login() method from Grade class
+        $user = $gradeObj->login($username, $password);
 
-        // Bind parameters: s = string
-        mysqli_stmt_bind_param($stmt, "ss", $username, $password);
-
-        // Execute the query
-        mysqli_stmt_execute($stmt);
-
-        // Get the result
-        $result = mysqli_stmt_get_result($stmt);
-
-        if (mysqli_num_rows($result) === 1) {
-            // Fetch the matching user record
-            $user = mysqli_fetch_assoc($result);
-
-            // MIDDLE LAYER: Store user info in session
+        if ($user) {
+            // Store user info in session
             $_SESSION['grade_user']       = $user['username'];
             $_SESSION['grade_role']       = $user['role'];
             $_SESSION['grade_user_id']    = $user['user_id'];
@@ -83,9 +68,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             $error = "Invalid username or password. Please try again.";
         }
-
-        // Close statement to free resources
-        mysqli_stmt_close($stmt);
     }
 }
 ?>
@@ -395,7 +377,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </button>
             </div>
 
-            <!-- Error Message (shown if login fails) -->
+            <!-- Error Message -->
             <?php if (!empty($error)): ?>
                 <div class="error-msg">
                     <i class="fas fa-exclamation-circle"></i>
@@ -403,9 +385,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             <?php endif; ?>
 
-            <!-- Login Form - POST to same page -->
+            <!-- Login Form -->
             <form method="POST" action="">
-
                 <div class="form-group">
                     <label>Username</label>
                     <div class="input-wrapper">
@@ -432,7 +413,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </button>
             </form>
 
-            <!-- Test credentials hint box -->
+            <!-- Test credentials hint -->
             <div class="hint-box">
                 <p><i class="fas fa-info-circle"></i> Test Credentials:</p>
                 <ul>

@@ -4,62 +4,47 @@
 // MODULE: Grade & Result Tracking
 // PROJECT: EduTeam - Student Record System
 // DEVELOPER: Binu Karki
-// LAYER: Middle Layer (Business Logic) + Presentation Layer
-// DESCRIPTION: Student view - shows their own grades and charts
+// LAYER: Presentation Layer
+// DESCRIPTION: Student dashboard - uses Grade class (middle layer)
+//              to fetch and display student's own grades and charts
 // ============================================================
 
 // MIDDLE LAYER: Start session
 session_start();
 
 // Security check: only students allowed
-// Redirect to login if not authenticated as student
 if (!isset($_SESSION['grade_user']) || $_SESSION['grade_role'] !== 'student') {
     header("Location: grade_login.php");
     exit();
 }
 
 // DATA LAYER: Include shared database connection
-// Uses $conn (procedural mysqli) from shared db.php
 require_once '../../db.php';
 
-// MIDDLE LAYER: Get student_id stored in session during login
+// MIDDLE LAYER: Include and instantiate Grade class
+require_once 'Grade.php';
+$gradeObj = new Grade($conn);
+
+// MIDDLE LAYER: Get student_id from session
 $student_id = $_SESSION['grade_student_id'];
 
 // ============================================================
-// DATA LAYER: Fetch this student's grades only
-// Filters by student_id from session - student sees only their own
+// MIDDLE LAYER: Fetch data using Grade class methods
 // ============================================================
-$stmt = mysqli_prepare($conn,
-    "SELECT * FROM grade WHERE student_id = ? ORDER BY grade_id DESC"
-);
-mysqli_stmt_bind_param($stmt, "i", $student_id); // i = integer
-mysqli_stmt_execute($stmt);
-$result = mysqli_stmt_get_result($stmt);
-$grades = mysqli_fetch_all($result, MYSQLI_ASSOC); // All rows as array
-mysqli_stmt_close($stmt);
+
+// Get this student's grades only
+$grades = $gradeObj->getStudentGrades($student_id);
+
+// Get chart data for this student
+$chart_rows = $gradeObj->getStudentChartData($student_id);
 
 // ============================================================
-// DATA LAYER: Fetch chart data for this student
-// Gets mid_term, final_term, percentage per course for charts
+// MIDDLE LAYER: Prepare chart arrays for JavaScript
 // ============================================================
-$chart_stmt = mysqli_prepare($conn,
-    "SELECT course_id, mid_term, final_term, percentage, is_passed
-     FROM grade WHERE student_id = ? ORDER BY course_id"
-);
-mysqli_stmt_bind_param($chart_stmt, "i", $student_id);
-mysqli_stmt_execute($chart_stmt);
-$chart_result = mysqli_stmt_get_result($chart_stmt);
-$chart_rows   = mysqli_fetch_all($chart_result, MYSQLI_ASSOC);
-mysqli_stmt_close($chart_stmt);
-
-// ============================================================
-// MIDDLE LAYER: Prepare chart data arrays for JavaScript
-// json_encode() converts PHP arrays to JavaScript arrays
-// ============================================================
-$chart_labels  = []; // Course names for X axis
-$chart_mid     = []; // Mid term scores
-$chart_final   = []; // Final term scores
-$chart_percent = []; // Percentage per course
+$chart_labels  = [];
+$chart_mid     = [];
+$chart_final   = [];
+$chart_percent = [];
 
 foreach ($chart_rows as $row) {
     $chart_labels[]  = $row['course_id'];
@@ -69,8 +54,7 @@ foreach ($chart_rows as $row) {
 }
 
 // ============================================================
-// MIDDLE LAYER: Calculate student summary statistics
-// Total courses, passed, failed, average percentage
+// MIDDLE LAYER: Calculate summary statistics
 // ============================================================
 $total_courses  = count($grades);
 $total_passed   = 0;
@@ -79,14 +63,14 @@ $avg_percentage = 0;
 
 foreach ($grades as $g) {
     if ($g['is_passed'] == 1) {
-        $total_passed++; // Count passed subjects
+        $total_passed++;
     } else {
-        $total_failed++; // Count failed subjects
+        $total_failed++;
     }
-    $avg_percentage += $g['percentage']; // Sum for average
+    $avg_percentage += $g['percentage'];
 }
 
-// Calculate average (avoid division by zero)
+// Avoid division by zero
 $avg_percentage = $total_courses > 0
     ? round($avg_percentage / $total_courses, 2)
     : 0;
@@ -146,7 +130,7 @@ $avg_percentage = $total_courses > 0
         .stat-num.red   { color: var(--error); }
         .stat-label { font-size: 0.8rem; color: var(--light-text); margin-top: 4px; }
 
-        /* GRID 2 */
+        /* GRID */
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px; }
         @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
 
@@ -166,17 +150,11 @@ $avg_percentage = $total_courses > 0
         tbody tr { border-bottom: 1px solid var(--border); transition: background 0.2s; }
         tbody tr:hover { background: #f7f4fa; }
         tbody td { padding: 12px 15px; }
-
-        /* Badges */
         .badge      { padding: 4px 12px; border-radius: 20px; font-size: 0.78rem; font-weight: 500; }
         .badge-pass { background: #eafaf1; color: #1e8449; }
         .badge-fail { background: #fdecea; color: var(--error); }
-
-        /* Progress bar for percentage column */
         .progress-bar-wrap { background: #f0f0f5; border-radius: 20px; height: 8px; width: 100px; display: inline-block; vertical-align: middle; margin-right: 8px; }
         .progress-bar-fill { height: 8px; border-radius: 20px; background: var(--primary); }
-
-        /* Empty state */
         .no-data { text-align: center; padding: 40px; color: var(--light-text); }
 
         /* FOOTER */
@@ -234,28 +212,23 @@ $avg_percentage = $total_courses > 0
 
     <?php if (!empty($grades)): ?>
 
-        <!-- PRESENTATION LAYER: Two Charts Side by Side -->
+        <!-- PRESENTATION LAYER: Charts -->
         <div class="grid-2">
-
-            <!-- Line Chart: Mid Term vs Final Term -->
             <div class="card">
                 <div class="card-title"><i class="fas fa-chart-line"></i> Mid Term vs Final Term</div>
                 <div class="chart-container">
                     <canvas id="studentChart"></canvas>
                 </div>
             </div>
-
-            <!-- Bar Chart: Percentage per Course -->
             <div class="card">
                 <div class="card-title"><i class="fas fa-chart-bar"></i> Percentage by Course</div>
                 <div class="chart-container">
                     <canvas id="percentChart"></canvas>
                 </div>
             </div>
-
         </div>
 
-        <!-- PRESENTATION LAYER: Grade Details Table -->
+        <!-- PRESENTATION LAYER: Grade Table -->
         <div class="card-full">
             <div class="card-title"><i class="fas fa-list-alt"></i> My Grade Details</div>
             <div class="table-wrapper">
@@ -272,7 +245,6 @@ $avg_percentage = $total_courses > 0
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Loop through student's own grades -->
                         <?php foreach ($grades as $i => $g): ?>
                             <tr>
                                 <td><?= $i + 1 ?></td>
@@ -281,16 +253,12 @@ $avg_percentage = $total_courses > 0
                                 <td><?= $g['final_term'] ?> / 100</td>
                                 <td><?= $g['total_grade'] ?> / 200</td>
                                 <td>
-                                    <!-- Visual progress bar for percentage -->
                                     <span class="progress-bar-wrap">
-                                        <span class="progress-bar-fill"
-                                              style="width: <?= min($g['percentage'], 100) ?>%">
-                                        </span>
+                                        <span class="progress-bar-fill" style="width: <?= min($g['percentage'], 100) ?>%"></span>
                                     </span>
                                     <?= $g['percentage'] ?>%
                                 </td>
                                 <td>
-                                    <!-- Pass/Fail badge -->
                                     <span class="badge <?= $g['is_passed'] ? 'badge-pass' : 'badge-fail' ?>">
                                         <?= $g['is_passed'] ? '✓ Pass' : '✗ Fail' ?>
                                     </span>
@@ -303,7 +271,6 @@ $avg_percentage = $total_courses > 0
         </div>
 
     <?php else: ?>
-        <!-- Show if no grades found for this student -->
         <div class="card-full">
             <div class="no-data">
                 <i class="fas fa-inbox" style="font-size:3rem; display:block; margin-bottom:12px;"></i>
@@ -317,19 +284,14 @@ $avg_percentage = $total_courses > 0
 
 <footer>&copy; 2026 EduTeam | Grade &amp; Result Tracking Module | Developed by Binu Karki</footer>
 
-<!-- ============================================================
-     PRESENTATION LAYER: Chart.js Scripts
-     Chart 1: Line chart - Mid Term vs Final Term per course
-     Chart 2: Bar chart  - Percentage per course (green=pass, red=fail)
-     Data passed from PHP using json_encode()
-============================================================ -->
+<!-- PRESENTATION LAYER: Chart.js Scripts -->
 <script>
-    // CHART 1: Line Chart - Mid Term vs Final Term
+    // Line Chart: Mid Term vs Final Term
     const ctx1 = document.getElementById('studentChart').getContext('2d');
     new Chart(ctx1, {
         type: 'line',
         data: {
-            labels: <?= json_encode($chart_labels) ?>, // Course names from PHP
+            labels: <?= json_encode($chart_labels) ?>,
             datasets: [
                 {
                     label: 'Mid Term',
@@ -363,7 +325,7 @@ $avg_percentage = $total_courses > 0
         }
     });
 
-    // CHART 2: Bar Chart - Percentage per Course
+    // Bar Chart: Percentage per Course
     const ctx2 = document.getElementById('percentChart').getContext('2d');
     new Chart(ctx2, {
         type: 'bar',
@@ -372,7 +334,6 @@ $avg_percentage = $total_courses > 0
             datasets: [{
                 label: 'Percentage (%)',
                 data: <?= json_encode($chart_percent) ?>,
-                // Green bar if pass (>=50), red bar if fail (<50)
                 backgroundColor: <?= json_encode(array_map(function($p) {
                     return $p >= 50 ? '#1e8449' : '#c0392b';
                 }, $chart_percent)) ?>,

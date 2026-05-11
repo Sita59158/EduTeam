@@ -4,72 +4,61 @@
 // MODULE: Grade & Result Tracking
 // PROJECT: EduTeam - Student Record System
 // DEVELOPER: Binu Karki
-// LAYER: Middle Layer (Business Logic) + Presentation Layer
-// DESCRIPTION: Teacher dashboard - Add, Edit, Delete, Search,
-//              Filter grades and view Pass/Fail chart analytics
+// LAYER: Presentation Layer
+// DESCRIPTION: Teacher dashboard - uses Grade class (middle layer)
+//              for all database operations
+//              Features: Add, Edit, Delete, Search, Filter, Chart
 // ============================================================
 
 // MIDDLE LAYER: Start session
 session_start();
 
 // Security check: only teachers allowed
-// Redirect to login if not authenticated as teacher
 if (!isset($_SESSION['grade_user']) || $_SESSION['grade_role'] !== 'teacher') {
     header("Location: grade_login.php");
     exit();
 }
 
 // DATA LAYER: Include shared database connection
-// Uses $conn (procedural mysqli) from shared db.php
 require_once '../../db.php';
+
+// MIDDLE LAYER: Include and instantiate Grade class
+require_once 'Grade.php';
+$gradeObj = new Grade($conn);
 
 $success = '';
 $error   = '';
 
 // ============================================================
-// MIDDLE LAYER: ADD GRADE
-// Processes form when teacher submits a new grade
+// PRESENTATION LAYER: Handle ADD grade form submission
+// Calls Grade class validateInput() then addGrade()
 // ============================================================
 if (isset($_POST['action']) && $_POST['action'] === 'add') {
 
     // Sanitize inputs
-    $student_id = intval($_POST['student_id']);      // Cast to int
-    $course_id  = trim($_POST['course_id']);          // Remove spaces
-    $mid_term   = floatval($_POST['mid_term']);       // Cast to float
-    $final_term = floatval($_POST['final_term']);     // Cast to float
+    $student_id = intval($_POST['student_id']);
+    $course_id  = trim($_POST['course_id']);
+    $mid_term   = floatval($_POST['mid_term']);
+    $final_term = floatval($_POST['final_term']);
 
-    // MIDDLE LAYER: Validate all inputs
-    if ($student_id <= 0 || empty($course_id) || $mid_term < 0 || $mid_term > 100 || $final_term < 0 || $final_term > 100) {
-        $error = "Please fill all fields correctly. Marks must be between 0 and 100.";
+    // MIDDLE LAYER: Validate using Grade class method
+    $validation_error = $gradeObj->validateInput($student_id, $course_id, $mid_term, $final_term);
+
+    if (!empty($validation_error)) {
+        $error = $validation_error;
     } else {
-        // Calculate total, percentage and pass/fail
-        $total_grade = $mid_term + $final_term;
-        $percentage  = ($total_grade / 200) * 100;
-        $is_passed   = ($percentage >= 50) ? 1 : 0;
-
-        // DATA LAYER: Insert new grade using prepared statement
-        $stmt = mysqli_prepare($conn,
-            "INSERT INTO grade (student_id, course_id, mid_term, final_term, total_grade, percentage, is_passed)
-             VALUES (?, ?, ?, ?, ?, ?, ?)"
-        );
-
-        // Bind: i=int, s=string, d=double
-        mysqli_stmt_bind_param($stmt, "isddddi",
-            $student_id, $course_id, $mid_term, $final_term, $total_grade, $percentage, $is_passed
-        );
-
-        if (mysqli_stmt_execute($stmt)) {
+        // MIDDLE LAYER: Add grade using Grade class method
+        if ($gradeObj->addGrade($student_id, $course_id, $mid_term, $final_term)) {
             $success = "Grade added successfully!";
         } else {
             $error = "Failed to add grade. Please try again.";
         }
-        mysqli_stmt_close($stmt); // Free resources
     }
 }
 
 // ============================================================
-// MIDDLE LAYER: EDIT GRADE
-// Updates an existing grade record in the database
+// PRESENTATION LAYER: Handle EDIT grade form submission
+// Calls Grade class validateInput() then updateGrade()
 // ============================================================
 if (isset($_POST['action']) && $_POST['action'] === 'edit') {
 
@@ -80,124 +69,57 @@ if (isset($_POST['action']) && $_POST['action'] === 'edit') {
     $mid_term   = floatval($_POST['mid_term']);
     $final_term = floatval($_POST['final_term']);
 
-    // Validate inputs
-    if ($grade_id <= 0 || $student_id <= 0 || empty($course_id) || $mid_term < 0 || $final_term < 0) {
-        $error = "Invalid data. Please check your inputs.";
+    // MIDDLE LAYER: Validate using Grade class method
+    $validation_error = $gradeObj->validateInput($student_id, $course_id, $mid_term, $final_term);
+
+    if (!empty($validation_error)) {
+        $error = $validation_error;
     } else {
-        // Recalculate values
-        $total_grade = $mid_term + $final_term;
-        $percentage  = ($total_grade / 200) * 100;
-        $is_passed   = ($percentage >= 50) ? 1 : 0;
-
-        // DATA LAYER: Update grade record
-        $stmt = mysqli_prepare($conn,
-            "UPDATE grade SET student_id=?, course_id=?, mid_term=?, final_term=?,
-             total_grade=?, percentage=?, is_passed=? WHERE grade_id=?"
-        );
-
-        mysqli_stmt_bind_param($stmt, "isddddii",
-            $student_id, $course_id, $mid_term, $final_term, $total_grade, $percentage, $is_passed, $grade_id
-        );
-
-        if (mysqli_stmt_execute($stmt)) {
+        // MIDDLE LAYER: Update grade using Grade class method
+        if ($gradeObj->updateGrade($grade_id, $student_id, $course_id, $mid_term, $final_term)) {
             $success = "Grade updated successfully!";
         } else {
             $error = "Failed to update grade.";
         }
-        mysqli_stmt_close($stmt);
     }
 }
 
 // ============================================================
-// MIDDLE LAYER: DELETE GRADE
-// Deletes a grade record by grade_id from URL
+// PRESENTATION LAYER: Handle DELETE grade
+// Calls Grade class deleteGrade() method
 // ============================================================
 if (isset($_GET['delete'])) {
+    $grade_id = intval($_GET['delete']);
 
-    $grade_id = intval($_GET['delete']); // Sanitize ID
-
-    // DATA LAYER: Delete prepared statement
-    $stmt = mysqli_prepare($conn, "DELETE FROM grade WHERE grade_id = ?");
-    mysqli_stmt_bind_param($stmt, "i", $grade_id);
-
-    if (mysqli_stmt_execute($stmt)) {
+    // MIDDLE LAYER: Delete using Grade class method
+    if ($gradeObj->deleteGrade($grade_id)) {
         $success = "Grade deleted successfully!";
     } else {
         $error = "Failed to delete grade.";
     }
-    mysqli_stmt_close($stmt);
 }
 
 // ============================================================
-// MIDDLE LAYER: SEARCH & FILTER
-// Dynamically builds query based on user search/filter input
+// MIDDLE LAYER: Fetch data using Grade class methods
 // ============================================================
+
+// Get search and filter values
 $search        = isset($_GET['search'])        ? trim($_GET['search'])        : '';
 $filter_course = isset($_GET['filter_course']) ? trim($_GET['filter_course']) : '';
 
-// Base SQL query
-$query  = "SELECT * FROM grade WHERE 1=1";
-$params = [];
-$types  = '';
+// Get all grades (with search/filter applied)
+$grades = $gradeObj->getAllGrades($search, $filter_course);
 
-// Add search condition if provided
-if (!empty($search)) {
-    $query   .= " AND student_id LIKE ?";
-    $params[] = "%$search%";
-    $types   .= 's';
-}
+// Get chart data for bar graph
+$chart_data = $gradeObj->getChartData();
 
-// Add course filter condition if selected
-if (!empty($filter_course)) {
-    $query   .= " AND course_id = ?";
-    $params[] = $filter_course;
-    $types   .= 's';
-}
+// Get courses for filter dropdown
+$courses = $gradeObj->getAllCourses();
 
-$query .= " ORDER BY grade_id DESC";
-
-// DATA LAYER: Execute dynamic search query
-$stmt = mysqli_prepare($conn, $query);
-if (!empty($params)) {
-    mysqli_stmt_bind_param($stmt, $types, ...$params);
-}
-mysqli_stmt_execute($stmt);
-$result = mysqli_stmt_get_result($stmt);
-$grades = mysqli_fetch_all($result, MYSQLI_ASSOC); // All rows as array
-mysqli_stmt_close($stmt);
-
-// ============================================================
-// DATA LAYER: CHART AGGREGATE QUERY
-// Counts passed/failed for Mid Term, Final Term, Overall
-// ============================================================
-$chart_result = mysqli_query($conn,
-    "SELECT
-        SUM(CASE WHEN mid_term >= 50 THEN 1 ELSE 0 END)   AS mid_passed,
-        SUM(CASE WHEN mid_term < 50 THEN 1 ELSE 0 END)    AS mid_failed,
-        SUM(CASE WHEN final_term >= 50 THEN 1 ELSE 0 END) AS final_passed,
-        SUM(CASE WHEN final_term < 50 THEN 1 ELSE 0 END)  AS final_failed,
-        SUM(CASE WHEN is_passed = 1 THEN 1 ELSE 0 END)    AS overall_passed,
-        SUM(CASE WHEN is_passed = 0 THEN 1 ELSE 0 END)    AS overall_failed
-     FROM grade"
-);
-$chart_data = mysqli_fetch_assoc($chart_result);
-
-// DATA LAYER: Fetch distinct courses for filter dropdown
-$courses_result = mysqli_query($conn, "SELECT DISTINCT course_id FROM grade ORDER BY course_id");
-$courses = mysqli_fetch_all($courses_result, MYSQLI_ASSOC);
-
-// MIDDLE LAYER: Fetch grade record if edit button clicked
+// Get grade for editing if edit button clicked
 $edit_grade = null;
 if (isset($_GET['edit'])) {
-    $edit_id = intval($_GET['edit']);
-
-    // DATA LAYER: Fetch single grade by ID
-    $stmt = mysqli_prepare($conn, "SELECT * FROM grade WHERE grade_id = ?");
-    mysqli_stmt_bind_param($stmt, "i", $edit_id);
-    mysqli_stmt_execute($stmt);
-    $edit_result = mysqli_stmt_get_result($stmt);
-    $edit_grade  = mysqli_fetch_assoc($edit_result);
-    mysqli_stmt_close($stmt);
+    $edit_grade = $gradeObj->getGradeById(intval($_GET['edit']));
 }
 ?>
 <!DOCTYPE html>
@@ -229,34 +151,14 @@ if (isset($_GET['edit'])) {
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
         body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); }
 
         /* NAVBAR */
-        .navbar {
-            background: var(--primary);
-            padding: 15px 30px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 2px 10px rgba(74,35,90,0.3);
-            position: sticky; top: 0; z-index: 100;
-        }
-        .navbar-brand {
-            color: white; font-family: 'Playfair Display', serif;
-            font-size: 1.4rem; text-decoration: none;
-            display: flex; align-items: center; gap: 10px;
-        }
+        .navbar { background: var(--primary); padding: 15px 30px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 10px rgba(74,35,90,0.3); position: sticky; top: 0; z-index: 100; }
+        .navbar-brand { color: white; font-family: 'Playfair Display', serif; font-size: 1.4rem; text-decoration: none; display: flex; align-items: center; gap: 10px; }
         .navbar-right { display: flex; align-items: center; gap: 15px; }
         .navbar-user  { color: rgba(255,255,255,0.85); font-size: 0.9rem; }
-        .btn-logout {
-            background: rgba(255,255,255,0.15); color: white;
-            border: 1px solid rgba(255,255,255,0.3);
-            padding: 7px 16px; border-radius: 8px;
-            font-family: 'DM Sans', sans-serif; font-size: 0.85rem;
-            cursor: pointer; text-decoration: none; transition: all 0.3s;
-            display: flex; align-items: center; gap: 6px;
-        }
+        .btn-logout { background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 7px 16px; border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; cursor: pointer; text-decoration: none; transition: all 0.3s; display: flex; align-items: center; gap: 6px; }
         .btn-logout:hover { background: rgba(255,255,255,0.25); }
 
         /* CONTAINER */
@@ -272,13 +174,13 @@ if (isset($_GET['edit'])) {
         .alert-success { background: #eafaf1; border-left: 4px solid var(--success); color: var(--success); }
         .alert-error   { background: #fdecea; border-left: 4px solid var(--error);   color: var(--error); }
 
-        /* STATS GRID */
+        /* STATS */
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 15px; margin-bottom: 25px; }
         .stat-card  { background: white; border-radius: 12px; padding: 20px; text-align: center; box-shadow: 0 2px 12px rgba(74,35,90,0.08); border-top: 4px solid var(--primary); }
         .stat-num   { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--primary); font-weight: 700; }
         .stat-label { font-size: 0.8rem; color: var(--light-text); margin-top: 4px; }
 
-        /* GRID 2 COLUMNS */
+        /* GRID */
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px; }
         @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
 
@@ -361,7 +263,7 @@ if (isset($_GET['edit'])) {
         <p>Manage all student grades — add, edit, delete, search and view analytics</p>
     </div>
 
-    <!-- PRESENTATION LAYER: Success/Error Alerts -->
+    <!-- Alerts -->
     <?php if (!empty($success)): ?>
         <div class="alert alert-success"><i class="fas fa-check-circle"></i> <?= htmlspecialchars($success) ?></div>
     <?php endif; ?>
@@ -369,7 +271,7 @@ if (isset($_GET['edit'])) {
         <div class="alert alert-error"><i class="fas fa-exclamation-circle"></i> <?= htmlspecialchars($error) ?></div>
     <?php endif; ?>
 
-    <!-- PRESENTATION LAYER: Stats Summary Cards -->
+    <!-- Stats Cards -->
     <div class="stats-grid">
         <div class="stat-card">
             <div class="stat-num"><?= count($grades) ?></div>
@@ -389,17 +291,16 @@ if (isset($_GET['edit'])) {
         </div>
     </div>
 
-    <!-- PRESENTATION LAYER: Add/Edit Form + Chart -->
+    <!-- Add/Edit Form + Chart -->
     <div class="grid-2">
 
-        <!-- Add / Edit Grade Form -->
+        <!-- PRESENTATION LAYER: Add/Edit Form -->
         <div class="card">
             <div class="card-title">
                 <i class="fas fa-<?= $edit_grade ? 'edit' : 'plus-circle' ?>"></i>
                 <?= $edit_grade ? 'Edit Grade' : 'Add New Grade' ?>
             </div>
 
-            <!-- POST to same page; hidden action field tells PHP what to do -->
             <form method="POST" action="">
                 <input type="hidden" name="action" value="<?= $edit_grade ? 'edit' : 'add' ?>">
                 <?php if ($edit_grade): ?>
@@ -449,7 +350,7 @@ if (isset($_GET['edit'])) {
             </form>
         </div>
 
-        <!-- Pass/Fail Bar Chart -->
+        <!-- PRESENTATION LAYER: Chart -->
         <div class="card">
             <div class="card-title"><i class="fas fa-chart-pie"></i> Pass / Fail Overview</div>
             <div class="chart-container">
@@ -462,7 +363,7 @@ if (isset($_GET['edit'])) {
     <div class="card-full">
         <div class="card-title"><i class="fas fa-list"></i> All Student Grades</div>
 
-        <!-- Search & Filter Form (GET method) -->
+        <!-- Search & Filter -->
         <form method="GET" action="">
             <div class="search-bar">
                 <input type="text" name="search"
@@ -486,7 +387,7 @@ if (isset($_GET['edit'])) {
             </div>
         </form>
 
-        <!-- Grades Table -->
+        <!-- Table -->
         <div class="table-wrapper">
             <table>
                 <thead>
@@ -526,11 +427,9 @@ if (isset($_GET['edit'])) {
                                     </span>
                                 </td>
                                 <td>
-                                    <!-- Edit: sends grade_id via GET to pre-fill form -->
                                     <a href="?edit=<?= $g['grade_id'] ?>" class="btn btn-edit">
                                         <i class="fas fa-edit"></i> Edit
                                     </a>
-                                    <!-- Delete: JS confirm before deleting -->
                                     <a href="?delete=<?= $g['grade_id'] ?>"
                                        class="btn btn-delete"
                                        onclick="return confirm('Are you sure you want to delete this grade?')">
@@ -549,7 +448,7 @@ if (isset($_GET['edit'])) {
 
 <footer>&copy; 2026 EduTeam | Grade &amp; Result Tracking Module | Developed by Binu Karki</footer>
 
-<!-- PRESENTATION LAYER: Chart.js Bar Chart Script -->
+<!-- PRESENTATION LAYER: Chart.js -->
 <script>
     const ctx = document.getElementById('gradeChart').getContext('2d');
     new Chart(ctx, {
